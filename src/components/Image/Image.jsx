@@ -3,9 +3,9 @@ import "./Image.css";
 
 class Image extends Component {
   render() {
-    const { src, alt } = this.props;
+    const { src, alt, current } = this.props;
     return (
-      <div className="img-box">
+      <div className="img-box" id={current}>
         <img src={src} alt={alt} />
       </div>
     );

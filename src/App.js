@@ -10,7 +10,8 @@ class App extends Component {
     super(props);
     this.state = {
       photos: [],
-      photoNum: 20
+      photoNum: 20,
+      currentImg: 0
     };
   }
 
@@ -51,6 +52,7 @@ class App extends Component {
             return (
               <Image
                 key={photo.id}
+                current={this.state.currentImg}
                 src={photo.thumbnail_src}
                 alt={photo.edge_media_to_caption.edges[0].node.text}
               />
