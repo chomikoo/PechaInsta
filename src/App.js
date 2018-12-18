@@ -7,7 +7,10 @@ import Input from "./components/Input/Input";
 class App extends Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      photos: [],
+      photoNum: 0
+    };
   }
 
   componentWillMount() {
@@ -17,26 +20,35 @@ class App extends Component {
   }
 
   fetchImages = url => {
-    console.log(url);
-
     return fetch(url)
       .then(data => data.json())
       .then(json => {
-        if (json) {
-          console.log(json);
-          return Promise.resolve(json);
-        } else {
-          return Promise.reject(Error("Błąd połączenia!"));
-        }
-      });
+        // console.log(json.data);
+        this.setState({
+          photos: json.data
+        });
+      })
+      .catch();
   };
 
   render() {
     return (
       <div className="App">
         <div className="header">
-          <img className="logo" src={logo} />
+          <img className="logo" src={logo} alt="Logo PechaKucha Insta" />
           <Input />
+        </div>
+        <div className="body">
+          {this.state.photos.map(photo => {
+            return (
+              <div key={photo.id}>
+                <img
+                  src={photo.images.standard_resolution.url}
+                  alt={photo.captioin}
+                />
+              </div>
+            );
+          })}
         </div>
       </div>
     );
