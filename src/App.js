@@ -3,19 +3,21 @@ import "./App.css";
 
 import logo from "./logo.svg";
 import Input from "./components/Input/Input";
+import Image from "./components/Image/Image";
 
 class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
       photos: [],
-      photoNum: 0
+      photoNum: 20
     };
   }
 
   componentWillMount() {
-    const access_token = "1394009005.3ee3dcd.b19c16774879468182aa8d20bebc82da";
-    const url = `https://api.instagram.com/v1/users/self/media/recent/?access_token=${access_token}`;
+    // const access_token = "1394009005.3ee3dcd.b19c16774879468182aa8d20bebc82da";
+    const tag = "christmas";
+    const url = `https://www.instagram.com/explore/tags/${tag}/?__a=1`;
     this.fetchImages(url);
   }
 
@@ -23,12 +25,18 @@ class App extends Component {
     return fetch(url)
       .then(data => data.json())
       .then(json => {
-        // console.log(json.data);
+        const photoArr = [];
+        for (let i = 0; i < this.state.photoNum; i++) {
+          photoArr.push(
+            json.graphql.hashtag.edge_hashtag_to_media.edges[i].node
+          );
+        }
+        console.log(photoArr);
         this.setState({
-          photos: json.data
+          photos: photoArr
         });
       })
-      .catch();
+      .catch(console.log("Error api"));
   };
 
   render() {
@@ -41,12 +49,11 @@ class App extends Component {
         <div className="body">
           {this.state.photos.map(photo => {
             return (
-              <div key={photo.id}>
-                <img
-                  src={photo.images.standard_resolution.url}
-                  alt={photo.captioin}
-                />
-              </div>
+              <Image
+                key={photo.id}
+                src={photo.thumbnail_src}
+                alt={photo.edge_media_to_caption.edges[0].node.text}
+              />
             );
           })}
         </div>
